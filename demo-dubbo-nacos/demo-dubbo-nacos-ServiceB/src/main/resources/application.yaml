@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: demo-dubbo-nacos-ServiceB
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.10.59:8848
+dubbo:
+  cloud:
+    subscribed-services: demo-dubbo-nacos-ServiceA
+  scan:
+    base-packages: com.zhss.demo.dubbo.nacos
