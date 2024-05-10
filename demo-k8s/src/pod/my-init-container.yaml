@@ -1,0 +1,37 @@
+# 初始化容器演示
+# 初始化容器向改写nginx首页文件，nginx启动的时候首页就读取到改写后的首页
+apiVersion: v1
+kind: Pod
+metadata:
+  name: init-container
+  labels:
+    app: init-container
+spec:
+  volumes:
+    - name: nginx-vol
+      emptyDir:
+        {}
+  initContainers:
+    - name: init
+      image: alpine
+      imagePullPolicy: IfNotPresent
+      command:
+        - /bin/sh
+        - -c
+        - "echo 'hello zgd' > /app/html/index.html"
+      volumeMounts:
+        - mountPath: /app/html
+          name: nginx-vol
+  containers:
+    - name: nginx
+      image: nginx
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 80
+          name: nginx
+          protocol: TCP
+      volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: nginx-vol
+
+  restartPolicy: Always

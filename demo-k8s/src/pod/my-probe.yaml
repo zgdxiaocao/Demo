@@ -1,0 +1,53 @@
+# 测试启动探针和存活探针
+# 现象：正常启动，一段时间后开始重启，无法进入ready状态
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-probe
+  labels:
+    app: my-probe
+spec:
+  volumes:
+    - name: my-probe-vol
+      emptyDir:
+        {}
+  # 初始化容器在共享文件夹中创建start文件
+  initContainers:
+    - name: init
+      image: alpine
+      imagePullPolicy: IfNotPresent
+      command:
+        - /bin/sh
+        - -c
+        - "touch /tmp/start"
+      volumeMounts:
+        - mountPath: /tmp
+          name: my-probe-vol
+  containers:
+    - name: app
+      image: alpine
+      imagePullPolicy: IfNotPresent
+      args:
+        - /bin/sh
+        - -c
+        - touch /tmp/healthy; sleep 30; rm -f /tmp/healthy; sleep 600
+      volumeMounts:
+        - mountPath: /tmp
+          name: my-probe-vol
+      startupProbe:
+        initialDelaySeconds: 3 #3s之后开始探测
+        exec:
+          command:
+            - /bin/sh
+            - cat
+            - /tmp/start
+      livenessProbe:
+        initialDelaySeconds: 3
+        failureThreshold: 3
+        timeoutSeconds: 10
+        exec:
+          command:
+            - /bin/sh
+            - cat
+            - /tmp/healthy
+  restartPolicy: Always
