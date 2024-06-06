@@ -1,0 +1,18 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name : demo-spring-boot
+  profiles:
+    active: dev
+
+mybatis-plus:
+  # 主键自增
+  global-config:
+    db-config:
+      id-type: auto
+  configuration:
+    # 控制台打印sql
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true

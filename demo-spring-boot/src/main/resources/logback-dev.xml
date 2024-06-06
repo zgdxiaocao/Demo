@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8">
+<configuration debug="false">
+    <incluede resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <!---->
+
+</configuration>
