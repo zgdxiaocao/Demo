@@ -1,6 +1,8 @@
 package com.zgd.controller;
 
 import com.zgd.core.JsonResult;
+import com.zgd.core.exception.ProductBizException;
+import com.zgd.core.exception.ProductErrorCodeEnum;
 import com.zgd.domain.request.DeployReq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -27,5 +29,11 @@ public class DeployerController {
     public JsonResult<Boolean> startDeploy(@Valid @RequestBody DeployReq deployReq,
                                            @NotEmpty(message = "userId不能为空") @RequestParam("userId") String userId) {
         return JsonResult.buildSuccess(Boolean.TRUE);
+    }
+
+
+    @GetMapping("/testException")
+    public JsonResult<String> testException() {
+        throw new ProductBizException(ProductErrorCodeEnum.DEVICE_GET_TOKEN_ERROR);
     }
 }
